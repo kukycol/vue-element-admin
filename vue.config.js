@@ -20,7 +20,7 @@ module.exports = {
   /**
    * You will need to set publicPath if you plan to deploy your site under a sub path,
    * for example GitHub Pages. If you plan to deploy your site to https://foo.github.io/bar/,
-   * then publicPath should be set to "/bar/".
+   * then publicPath should be set to '/bar/'.
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
@@ -29,14 +29,27 @@ module.exports = {
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
+  // devServer: {
+  //   port: port,
+  //   open: true,
+  //   overlay: {
+  //     warnings: false,
+  //     errors: true
+  //   },
+  //   before: require('./mock/mock-server.js')
+  // },
   devServer: {
-    port: port,
-    open: true,
-    overlay: {
-      warnings: false,
-      errors: true
+    proxy: {
+      '/dev-api': { // 代理api
+        target: 'http://localhost:9090', // 代理接口(注意只要域名就够了)
+        changeOrigin: true, // 是否跨域
+        ws: true, // proxy websockets
+        pathRewrite: { // 重写路径
+          '^/dev-api': ''// 代理路径
+        }
+      },
     },
-    before: require('./mock/mock-server.js')
+    disableHostCheck: true
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
